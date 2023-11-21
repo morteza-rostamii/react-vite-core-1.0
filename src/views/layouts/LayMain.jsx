@@ -1,11 +1,17 @@
 import React from 'react'
 import Header from './Header'
+import {Outlet} from 'react-router-dom'
 
 const MainLay = () => {
   return (
-    <div>
+    <div
+    className='
+    flex flex-col
+    h-full
+    '
+    >
       <Header/>
-      MainLay
+      <Outlet/>
     </div>
   )
 }
