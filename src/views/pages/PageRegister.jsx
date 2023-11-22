@@ -47,13 +47,12 @@ const PageRegister = () => {
     className='
     flex items-center justify-center
     flex-1
-    bg-red-50
     '
     >
       <form 
       className='
       flex flex-col gap-8 p-4 rounded-md
-      bg-green-100 text-center
+      bg-blue-100 text-center
       '
       onSubmit={(event) => {
         event.preventDefault();
@@ -65,7 +64,7 @@ const PageRegister = () => {
 
       >
         <h1>
-        <Link to='/login'>go to login</Link>
+        Register Form
         </h1>
         {/* <Input 
 
@@ -91,6 +90,7 @@ const PageRegister = () => {
         >
           register
         </Button>
+        <Link to='/login'>go to login</Link>
       </form>
     </div>
   )
