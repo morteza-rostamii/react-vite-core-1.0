@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import {auth} from '@/firebase/firedb'
-import {createUserWithEmailAndPassword} from 'firebase/auth'
+import {auth, googleProvider} from '@/firebase/firedb'
+import {createUserWithEmailAndPassword, signInWithPopup} from 'firebase/auth'
 
 // components
 import {Button} from '@mantine/core'
 import { Input } from '@mantine/core';
 import {Link, useNavigate} from 'react-router-dom'
+import {FaGoogle} from 'react-icons/fa'
 
 const PageRegister = () => {
   const [currentAuth] = useState(auth);
@@ -17,6 +18,7 @@ const PageRegister = () => {
 
   const navigate = useNavigate();
 
+  // register with email and password
   async function register() {
 
     await createUserWithEmailAndPassword(auth, user.email, user.password)
@@ -41,6 +43,19 @@ const PageRegister = () => {
     // this also can get the current logged in user
     // /console.log(auth?.currentUser)
   } 
+
+  // google auth
+  function handGoogleAuth() {
+    signInWithPopup(auth, googleProvider)
+      .then((result) => {
+        console.log('signed in with google!')
+        console.log(result);
+        navigate('/');
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+  }
 
   return (
     <div
@@ -91,6 +106,22 @@ const PageRegister = () => {
           register
         </Button>
         <Link to='/login'>go to login</Link>
+
+        <Button
+        variant='outline'
+        color='red'
+        
+        onClick={handGoogleAuth}
+        >
+          <span
+          className='
+          flex gap-3
+          '
+          >
+          <FaGoogle/>
+          <span>google</span>
+          </span>
+        </Button>
       </form>
     </div>
   )

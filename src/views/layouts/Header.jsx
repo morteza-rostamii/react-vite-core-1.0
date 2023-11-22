@@ -52,7 +52,27 @@ const Header = () => {
         <Link to='/'>Expenses</Link>
       </Button>
 
-      <nav>
+      <nav
+      className='
+      flex gap-3 items-center
+      '
+      >
+        {(() => {
+          if (authUser === null) return <></>
+          else if (authUser) return (
+            <span>
+              <img 
+              className='
+              rounded-full w-12
+              '
+              src={authUser.photoURL} 
+              alt="user profile" 
+              />
+              <p>{authUser.displayName}</p>
+            </span>
+          )
+          else return <></>
+        })()}
         {logoutBtn}
       </nav>  
     </header>
