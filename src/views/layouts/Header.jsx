@@ -45,13 +45,24 @@ const Header = () => {
     p-3 bg-blue-50
     '
     >
-      <Button
-      variant='outline'
-      color='green'
+      <div
+      className='
+      flex gap-3
+      '
       >
-        <Link to='/'>Expenses</Link>
-      </Button>
-
+        <Button
+        variant='outline'
+        color='green'
+        >
+          <Link to='/'>Expenses</Link>
+        </Button>
+        <Button
+        variant='outline'
+        color='green'
+        >
+          <Link to='/blog'>blog</Link>
+        </Button>
+      </div>
       <nav
       className='
       flex gap-3 items-center

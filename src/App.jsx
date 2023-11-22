@@ -6,6 +6,7 @@ import LayMain from './views/layouts/LayMain'
 import PageHome from './views/pages/PageHome'
 import PageRegister from './views/pages/PageRegister'
 import PageLogin from './views/pages/PageLogin'
+import PageBlog from './views/pages/PageBlog'
 
 import useAuthStore from '@/store/store.auth'
 import {onAuthStateChanged} from 'firebase/auth'
@@ -18,7 +19,7 @@ function App() {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         console.log('we have a logged in user!!!');
-        console.log(user);
+        //console.log(user);
         setAuth(user);
       } 
       else {
@@ -61,6 +62,12 @@ function App() {
             else if (authUser) return <>auth not allowed!</>
             else return <PageLogin/>
           })()}
+          >
+          </Route>
+
+          <Route
+          path='/blog'
+          element={<PageBlog/>}
           >
           </Route>
         </Route>
