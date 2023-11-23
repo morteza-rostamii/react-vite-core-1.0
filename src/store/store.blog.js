@@ -1,6 +1,6 @@
 import {create} from 'zustand'
 import {firestore} from '@/firebase/firedb'
-import {getDocs, collection, deleteDoc, doc, addDoc, updateDoc} from 'firebase/firestore'
+import {getDocs, collection, deleteDoc, doc, addDoc, updateDoc, query, where, onSnapshot} from 'firebase/firestore'
 import { getDocFromResponse } from '@/utils/utils.fixdata';
 
 // reference to blogs_collection
@@ -8,6 +8,16 @@ const blogsCollectionRef = collection(firestore, 'blogs');
 
 const useBlogStore = create((set, get) => ({
   blogs: [],
+
+  async testStuff() {
+    /* firestore.collection('blogs').get()
+      .then((res) => {
+        console.log(res)
+      })
+      .catch(error => {
+        console.log(error.message)
+      }) */
+  },
   
   // Get: /blogs
   async fetchBlogs() {
@@ -23,6 +33,25 @@ const useBlogStore = create((set, get) => ({
       return set(state => ({...state, blogs: docs}));
     } catch(error) {
       console.log(error);
+    }
+  },
+
+  // get published blogs
+  async getPublishedBlogs() {
+
+    try {
+      const res = query(
+        blogsCollectionRef, 
+        where("published", "==", true));
+
+      const snapshot = await getDocs(res);
+      const publishedBlogs = snapshot.docs.map((doc) => {
+        return {id: doc.id, ...doc.data()};
+      })
+
+      return publishedBlogs;
+    } catch(error) {
+      console.log(error.message);
     }
   },
   
@@ -47,16 +76,35 @@ const useBlogStore = create((set, get) => ({
   editBlog: (id, {title, body}) => {
     const blogDoc = doc(firestore, 'blogs', id);
 
+    // real-time snapshot on change
+    const unsub = onSnapshot(
+      doc(firestore, 'blogs', id), 
+      async (doc) => {
+        try {
+          const updatedBlog = {id: doc.id, ...doc.data()};
+          
+          set(state => ({
+            ...state, 
+            blogs: state.blogs.map(b => {
+              if (b.id === id) return updatedBlog;
+              else return b;
+          })}));
+
+        } catch(error) {
+          console.log(error.message)
+        }
+      })
+
     updateDoc(blogDoc, {
       title: title,
       body: body,
     })
       .then(async () => {
-        const updatedBlogDoc = await getDocFromResponse(firestore, 'blogs', id);
-        set(state => ({...state, blogs: state.blogs.map(b => {
-          if (b.id === id) return updatedBlogDoc;
-          else return b;
-        })}));
+        //const updatedBlogDoc = await getDocFromResponse(firestore, 'blogs', id);
+        
+
+        // after update unsubscribe
+        unsub();
       })
       .catch((error) => {
         console.log(error.message);

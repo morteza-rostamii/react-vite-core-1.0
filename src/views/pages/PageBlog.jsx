@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import useRunOnce from '@/hooks/useRunOnce'
 import useBlogStore from '@/store/store.blog'
+import {firestore} from '@/firebase/firedb'
 
 // compos
 import {Button} from '@mantine/core'
@@ -8,11 +9,21 @@ import BlogEdit from '@/views/components/BlogEdit'
 import BlogCreate from '@/views/components/BlogCreate'
 
 const PageBlog = () => {
-  const {blogs, fetchBlogs, deleteBlog} = useBlogStore();
+  const {blogs, fetchBlogs, deleteBlog, getPublishedBlogs, testStuff} = useBlogStore();
 
   useRunOnce(() => {
     fetchBlogs();
   });
+
+  useEffect(() => {
+    async function getPublished() {
+      const publishedBlogs = await getPublishedBlogs();
+      console.log(publishedBlogs);
+    }
+    getPublished();
+
+    testStuff();
+  }, [])
 
   return (
     <div
